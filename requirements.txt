@@ -1,0 +1,7 @@
+openai
+python-dotenv
+requests
+moviepy
+playwright
+pytube
+tqdm
