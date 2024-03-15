@@ -10,9 +10,10 @@ from brainfryer.media.tts import *
 from brainfryer.media.reddit import *
 from brainfryer.media.combiner import *
 from brainfryer.media.background import *
+from brainfryer.media.subtitles import *
 
 class VideoCreator:
-    def __init__(self, key, image_model, text_model, tts_model):
+    def __init__(self, key, image_model, text_model, tts_model, subtitles_model):
         if not os.path.exists("generated"):
             os.makedirs(f"generated/")
 
@@ -20,6 +21,8 @@ class VideoCreator:
         self.base_dir = "generated/" + current_time.strftime("%Y-%m-%d_%H-%M-%S") + "/"
         self.image_dir = self.base_dir + "images/"
         self.audio_dir = self.base_dir + "audio/"
+        self.output = self.base_dir + "output.mp4"
+        self.output = ".github/media/demo.mp4"
         os.makedirs(self.base_dir)
         os.makedirs(self.image_dir)
         os.makedirs(self.audio_dir)
@@ -29,7 +32,8 @@ class VideoCreator:
         self.tts_agent = TTSAgent(key, tts_model)
         self.reddit_agent = RedditAgent(self.image_dir)
         self.background_agent = BackgroundAgent(self.image_dir, self.audio_dir)
-        self.combiner = Combiner(self.audio_dir, self.image_dir, self.base_dir + "output.mp4")
+        self.subtitle_agent = SubtitleAgent(self.output, subtitles_model)
+        self.combiner = Combiner(self.audio_dir, self.image_dir, self.output)
 
     def parse_reddit_comments(self, reddit_url):
         print("Parsing Reddit post...")
@@ -84,13 +88,18 @@ class VideoCreator:
     def render_video(self):
         print("Rendering...")
         self.combiner.process_files_reddit()
-        print("Video rendered!")
-        print(self.base_dir + "output.mp4")
+        print(f"Video rendered at {self.output}!")
+
+    def generate_subtitles(self):
+        print("Generating subtitles...")
+        self.subtitle_agent.generate_subtitles()
+        print("Subtitles generated!")
 
     def generate_from_reddit_comments(self, reddit_url, background_url, background_music_url, create_images):
-        title, comments = self.parse_reddit_comments(reddit_url)
-        self.generate_tts(title, comments)
-        if (create_images):
-            self.generate_illustrations(title, comments)
-        self.generate_background(background_url, background_music_url)
-        self.render_video()
+        #title, comments = self.parse_reddit_comments(reddit_url)
+        #self.generate_tts(title, comments)
+        #if (create_images):
+        #    self.generate_illustrations(title, comments)
+        #self.generate_background(background_url, background_music_url)
+        #self.render_video()
+        self.generate_subtitles()

@@ -22,6 +22,7 @@ GPT_KEY = os.getenv('OPENAI_KEY')
 GPT_MODEL_TEXT = os.getenv('OPENAI_MODEL_TEXT')
 GPT_MODEL_IMAGE = os.getenv('OPENAI_MODEL_IMAGE')
 GPT_MODEL_TTS = os.getenv('OPENAI_MODEL_TTS')
+GPT_MODEL_SUBTITLES = os.getenv('OPENAI_MODEL_WHISPER')
 
 def parse_arguments():
     parser = argparse.ArgumentParser(description='Generate attention-grabbing videos!', prog='python -m brainfryer')
@@ -51,7 +52,7 @@ def main():
         song = input("Youtube song url (empty = default): ") or DEFAULT_SONG
         gen_images = True if input("Generate images (Y/N)? ").strip().lower() == 'y' else False
 
-    creator = VideoCreator(GPT_KEY, GPT_MODEL_IMAGE, GPT_MODEL_TEXT, GPT_MODEL_TTS)
+    creator = VideoCreator(GPT_KEY, GPT_MODEL_IMAGE, GPT_MODEL_TEXT, GPT_MODEL_TTS, GPT_MODEL_SUBTITLES)
 
     # Generate
     creator.generate_from_reddit_comments(url, background, song, gen_images)
