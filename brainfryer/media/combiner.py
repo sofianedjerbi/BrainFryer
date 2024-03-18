@@ -1,5 +1,5 @@
 import os
-from moviepy.editor import VideoFileClip, CompositeVideoClip, CompositeAudioClip, AudioFileClip, ImageClip, concatenate_videoclips
+from moviepy.editor import VideoFileClip, ColorClip, CompositeVideoClip, CompositeAudioClip, AudioFileClip, ImageClip, concatenate_videoclips
 
 class Combiner:
     def __init__(self, audio_dir, images_dir, output_file):
@@ -55,6 +55,18 @@ class Combiner:
 
             final_clips.append(composite_clip)
             current_time += audio_clip.duration
+
+        # Blank screen at the end
+        blank_duration = 2
+        clips = [
+            ColorClip(size=background_clip.size, color=(255, 255, 255, 0), duration=blank_duration),
+            background_clip.subclip(current_time, current_time + blank_duration),
+        ]
+        composite_clip = CompositeVideoClip(
+            clips,
+            size=background_clip.size
+        ).set_duration(blank_duration)
+        final_clips.append(composite_clip)
 
         final_video = concatenate_videoclips(final_clips, method="compose", bg_color=None, padding=0)
         background_music = background_music.audio_loop(duration=final_video.duration)
