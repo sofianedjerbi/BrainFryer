@@ -45,6 +45,7 @@ class VideoCreator:
             self.subtitle_agent = SubtitleAgent(self.output, subtitles_model)
             pbar.update(1)
             self.combiner = Combiner(self.audio_dir, self.image_dir, self.output)
+            pbar.update(1)
         logger.info("Binded!")
 
     def parse_reddit_comments(self, reddit_url):

@@ -39,7 +39,8 @@ class BackgroundAgent:
             codec="libx264", 
             audio_codec="aac",
             ffmpeg_params=["-profile:v", "baseline", "-pix_fmt", "yuv420p"],
-            fps=30
+            fps=30,
+            verbose=False
         )
         clip.close()
         os.remove(downloaded_file_path)
@@ -50,7 +51,8 @@ class BackgroundAgent:
         out_file = stream.download(filename=download_path)
         video_clip = AudioFileClip(out_file)
         final_file = out_file.replace(".mp4", ".mp3")
-        video_clip.write_audiofile(final_file)
+        video_clip.write_audiofile(final_file, verbose=False)
+        video_clip.close()
         os.remove(out_file)
 
         logger.debug(f"Downloaded and converted to MP3: {final_file}")

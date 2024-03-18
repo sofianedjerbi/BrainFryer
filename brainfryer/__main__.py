@@ -31,8 +31,10 @@ log_levels = {
 log_level_str = os.getenv('LOG_LEVEL', 'INFO').upper()
 log_level = log_levels.get(log_level_str, logging.INFO)
 
+# Some modules INFO are too verbose
 if log_level == logging.INFO:
-    logging.getLogger("openai").setLevel(logging.WARNING) # OpenAI INFO is too verbose
+    logging.getLogger("openai").setLevel(logging.WARNING) 
+    logging.getLogger("httpx").setLevel(logging.WARNING)
 
 logging.basicConfig(level=log_level, format='%(asctime)s - %(name)s - %(levelname)s - %(message)s')
 

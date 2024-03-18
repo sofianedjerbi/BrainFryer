@@ -66,5 +66,6 @@ class Combiner:
             codec="libx264", 
             audio_codec="aac",
             ffmpeg_params=["-profile:v", "baseline", "-pix_fmt", "yuv420p"],
-            fps=30
+            fps=30,
+            verbose=False
         )

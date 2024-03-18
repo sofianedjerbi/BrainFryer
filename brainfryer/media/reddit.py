@@ -10,8 +10,9 @@ BLACKLIST = [
     "kraut", "polack", "sambo", "slopey", "tacohead", "wetback", "zipperhead"
 ]
 
-logger = logging.getLogger(__name__)
+ZOOM = 1.5
 
+logger = logging.getLogger(__name__)
 blacklist_pattern = re.compile(r'\b(' + '|'.join(map(re.escape, BLACKLIST)) + r')\b', re.IGNORECASE)
 
 class RedditAgent:
@@ -28,17 +29,20 @@ class RedditAgent:
                 '--ignore-certifcate-errors',
                 '--ignore-certifcate-errors-spki-list',
                 '--disable-extensions',
-                '--disable-dev-shm-usage',
-                '--start-maximized'
+                '--disable-dev-shm-usage'
             ])
 
             context = browser.new_context(
-                device_scale_factor=2,
-                user_agent='Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/89.0.4389.82 Safari/537.36'
+                viewport={'width': 428, 'height': 926},
+                device_scale_factor=3.5,
+                user_agent='Mozilla/5.0 (iPhone; CPU iPhone OS 16_0 like Mac OS X) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/16.0 Mobile/15E148 Safari/604.1'
             )
 
             page = context.new_page()
             page.goto(url)
+
+            if page.is_visible('#accept-all-cookies-button'):
+                page.click('#accept-all-cookies-button')
 
             for i in range(5):
                 page.evaluate("window.scrollTo(0, document.body.scrollHeight)")
@@ -46,6 +50,11 @@ class RedditAgent:
                 if page.is_visible('text="View more comments"'):
                     page.click('text="View more comments"')
                 page.wait_for_timeout(1000)
+            
+            # Close google
+            iframe_element = page.frame_locator('#credential_picker_iframe')
+            if iframe_element.locator('#close').is_visible():
+               iframe_element.locator('#close').click()
 
             title_element = page.query_selector("h1")
             title_text = title_element.text_content().strip()
