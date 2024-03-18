@@ -7,7 +7,7 @@ BLACKLIST = [
     "fuck", "cunt", "whore", "faggot", "tranny", "shemale", "pussy", "bastard", 
     "bollocks", "cum", "fag", "queer", "sissy", "twat", "wank", "arsehole", "porn",
     "asshole", "bellend", "pube", "shit", "spunk", "tit", "tosser", "turd", "vagina", "wanker",
-    "kraut", "polack", "sambo", "slopey", "tacohead", "wetback", "zipperhead"
+    "kraut", "polack", "sambo", "slopey", "tacohead", "wetback", "zipperhead", "going down on"
 ]
 
 ZOOM = 1.5

@@ -66,8 +66,9 @@ class VideoCreator:
 
     def generate_illustrations(self, title, comments):
         logger.info("Generating illustrations...")
-        helper = "create a very short dall-e 3 prompt to illustrate the following sentence,\
-                  focus on key elements only, text on image is forbidden. Pay attention to content policy (prompt content only, no json): "
+        helper = "create a very short dall-e 3 prompt to illustrate the following sentence, " \
+            "focus on key elements only, text on image is forbidden. Make it follow dall-e content policy if needed. " \
+            "(prompt content only, no json): "
         
         url = self.image_agent.generate(self.text_agent.send_message(helper + title))
         response = requests.get(url)

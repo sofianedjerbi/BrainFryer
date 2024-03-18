@@ -17,7 +17,7 @@ class Combiner:
         current_time = 0
 
         for i, _ in enumerate(audio_files):
-            audio_clip = AudioFileClip(f'{self.audio_dir}/{i}.mp3').volumex(1.25)
+            audio_clip = AudioFileClip(f'{self.audio_dir}/{i}.mp3').volumex(1.6)
 
             image_path = f'{self.images_dir}/reddit_{i}.png'
             img_clip = ImageClip(image_path).set_duration(audio_clip.duration)

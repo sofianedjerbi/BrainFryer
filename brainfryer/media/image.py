@@ -1,7 +1,7 @@
 import logging
 import time
 import re
-from openai import OpenAI, BadRequestError
+from openai import OpenAI, BadRequestError, RateLimitError
 
 MAX_ATTEMPT = 3
 logger = logging.getLogger(__name__)
@@ -25,7 +25,7 @@ class ImageAgent:
                 logger.debug(f"Message denied: \"{message}\"")
                 if attempt > MAX_ATTEMPT:
                     logger.debug("Max tentative reached! Image won't be generated.")
-                    return
+                    raise e
                 logger.debug(f"Retrying, {MAX_ATTEMPT - attempt} retry left...")
                 new_message = self.text_agent.send_message(
                     f"This text does not pass DALL-E content policy. Rewrite it: {message}"
@@ -33,7 +33,10 @@ class ImageAgent:
                 logger.debug(f"New message: \"{new_message}\"")
                 return self.generate(new_message, attempt + 1)
             else:
-                time.sleep(10)
-                return self.generate(new_message, attempt)
+                raise e
+        except RateLimitError:
+            time.sleep(20)
+            logger.debug(f"Rate limit! Sleeping...")
+            return self.generate(new_message, attempt)
 
         return completion.data[0].url
