@@ -95,11 +95,12 @@ class VideoCreator:
         self.subtitle_agent.generate_subtitles()
         print("Subtitles generated!")
 
-    def generate_from_reddit_comments(self, reddit_url, background_url, background_music_url, create_images):
-        #title, comments = self.parse_reddit_comments(reddit_url)
-        #self.generate_tts(title, comments)
-        #if (create_images):
-        #    self.generate_illustrations(title, comments)
-        #self.generate_background(background_url, background_music_url)
-        #self.render_video()
-        self.generate_subtitles()
+    def generate_from_reddit_comments(self, reddit_url, background_url, background_music_url, create_images, create_subtitles):
+        title, comments = self.parse_reddit_comments(reddit_url)
+        self.generate_tts(title, comments)
+        if (create_images):
+            self.generate_illustrations(title, comments)
+        self.generate_background(background_url, background_music_url)
+        self.render_video()
+        if (create_subtitles):
+            self.generate_subtitles()
