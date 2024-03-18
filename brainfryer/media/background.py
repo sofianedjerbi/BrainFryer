@@ -1,7 +1,10 @@
+import logging
 import os
 import random
 from pytube import YouTube
 from moviepy.editor import VideoFileClip, AudioFileClip, vfx
+
+logger = logging.getLogger(__name__)
 
 class BackgroundAgent:
     def __init__(self, image_path, audio_path):
@@ -9,6 +12,7 @@ class BackgroundAgent:
         self.audio_path = audio_path
     
     def generate(self, duration, url, music_url):
+        logger.debug(f"Getting from \"{url}\"")
         final_video_path = f"{self.image_path}/background.mp4"
         yt = YouTube(url)
 
@@ -37,6 +41,7 @@ class BackgroundAgent:
             ffmpeg_params=["-profile:v", "baseline", "-pix_fmt", "yuv420p"],
             fps=30
         )
+        clip.close()
         os.remove(downloaded_file_path)
 
         download_path = f"{self.audio_path}/background.mp4"
@@ -48,4 +53,4 @@ class BackgroundAgent:
         video_clip.write_audiofile(final_file)
         os.remove(out_file)
 
-        print(f"Downloaded and converted to MP3: {final_file}")
+        logger.debug(f"Downloaded and converted to MP3: {final_file}")

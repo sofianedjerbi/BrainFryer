@@ -1,13 +1,16 @@
+import logging
 import re
 from playwright.sync_api import sync_playwright
 
 BLACKLIST = [
     "cock", "dick", "prostitute", "slut", "bitch", "nigga", "retarded", "nigger",
     "fuck", "cunt", "whore", "faggot", "tranny", "shemale", "pussy", "bastard", 
-    "bollocks", "cum", "fag", "queer", "sissy", "twat", "wank", "arsehole", 
+    "bollocks", "cum", "fag", "queer", "sissy", "twat", "wank", "arsehole", "porn",
     "asshole", "bellend", "pube", "shit", "spunk", "tit", "tosser", "turd", "vagina", "wanker",
-    "kraut", "polack", "sambo", "slopey", "tacohead", "wetback", "zipperhead", "going down on"
+    "kraut", "polack", "sambo", "slopey", "tacohead", "wetback", "zipperhead"
 ]
+
+logger = logging.getLogger(__name__)
 
 blacklist_pattern = re.compile(r'\b(' + '|'.join(map(re.escape, BLACKLIST)) + r')\b', re.IGNORECASE)
 
@@ -17,8 +20,24 @@ class RedditAgent:
     
     def parse_reddit_post(self, url, maximum=10):
         with sync_playwright() as playwright:
-            browser = playwright.chromium.launch(headless=False)
-            page = browser.new_page()
+            browser = playwright.chromium.launch(headless=True, args=[
+                '--no-sandbox',
+                '--disable-setuid-sandbox',
+                '--disable-infobars',
+                '--window-position=0,0',
+                '--ignore-certifcate-errors',
+                '--ignore-certifcate-errors-spki-list',
+                '--disable-extensions',
+                '--disable-dev-shm-usage',
+                '--start-maximized'
+            ])
+
+            context = browser.new_context(
+                device_scale_factor=2,
+                user_agent='Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/89.0.4389.82 Safari/537.36'
+            )
+
+            page = context.new_page()
             page.goto(url)
 
             for i in range(5):
@@ -30,6 +49,7 @@ class RedditAgent:
 
             title_element = page.query_selector("h1")
             title_text = title_element.text_content().strip()
+            logger.debug(f"Title: {title_text}")
 
             title_element = page.query_selector("//shreddit-post")
             title_element.screenshot(path=f"{self.image_path}/reddit_0.png")
@@ -61,6 +81,7 @@ class RedditAgent:
                 if bool(blacklist_pattern.search(cleaned_text)):
                     continue
 
+                logger.debug(f"Adding comment: {cleaned_text}")
                 comments_list.append(cleaned_text)
 
                 author_div.scroll_into_view_if_needed()

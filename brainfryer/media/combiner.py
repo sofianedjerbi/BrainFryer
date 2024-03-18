@@ -1,9 +1,4 @@
 import os
-import random
-import math
-import numpy
-from PIL import Image
-from moviepy.audio.fx.all import audio_loop
 from moviepy.editor import VideoFileClip, CompositeVideoClip, CompositeAudioClip, AudioFileClip, ImageClip, concatenate_videoclips
 
 class Combiner:
@@ -21,7 +16,7 @@ class Combiner:
         final_clips = []
         current_time = 0
 
-        for i, audio_file in enumerate(audio_files):
+        for i, _ in enumerate(audio_files):
             audio_clip = AudioFileClip(f'{self.audio_dir}/{i}.mp3').volumex(1.25)
 
             image_path = f'{self.images_dir}/reddit_{i}.png'
@@ -52,9 +47,6 @@ class Combiner:
 
                 # Adjusted to include the margin and position
                 clips.append(pic_clip.margin(top=32, opacity=0).set_position(("center", "top")))
-
-
-            bg_subclip = background_clip.subclip(current_time, current_time + audio_clip.duration)
 
             composite_clip = CompositeVideoClip(
                 clips,

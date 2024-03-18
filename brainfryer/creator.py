@@ -1,3 +1,4 @@
+import logging
 import os
 import random
 import requests
@@ -12,6 +13,8 @@ from brainfryer.media.combiner import *
 from brainfryer.media.background import *
 from brainfryer.media.subtitles import *
 
+logger = logging.getLogger(__name__)
+
 class VideoCreator:
     def __init__(self, key, image_model, text_model, tts_model, subtitles_model):
         if not os.path.exists("generated"):
@@ -22,39 +25,48 @@ class VideoCreator:
         self.image_dir = self.base_dir + "images/"
         self.audio_dir = self.base_dir + "audio/"
         self.output = self.base_dir + "output.mp4"
-        self.output = ".github/media/demo.mp4"
         os.makedirs(self.base_dir)
         os.makedirs(self.image_dir)
         os.makedirs(self.audio_dir)
 
-        self.text_agent = TextAgent(key, text_model)
-        self.image_agent = ImageAgent(key, image_model, self.text_agent)
-        self.tts_agent = TTSAgent(key, tts_model)
-        self.reddit_agent = RedditAgent(self.image_dir)
-        self.background_agent = BackgroundAgent(self.image_dir, self.audio_dir)
-        self.subtitle_agent = SubtitleAgent(self.output, subtitles_model)
-        self.combiner = Combiner(self.audio_dir, self.image_dir, self.output)
+        logger.info("Binding to APIs...")
+        agent_nb = 7
+        with tqdm(total=agent_nb, desc="Binding to APIs") as pbar:
+            self.text_agent = TextAgent(key, text_model)
+            pbar.update(1)
+            self.image_agent = ImageAgent(key, image_model, self.text_agent)
+            pbar.update(1)
+            self.tts_agent = TTSAgent(key, tts_model)
+            pbar.update(1)
+            self.reddit_agent = RedditAgent(self.image_dir)
+            pbar.update(1)
+            self.background_agent = BackgroundAgent(self.image_dir, self.audio_dir)
+            pbar.update(1)
+            self.subtitle_agent = SubtitleAgent(self.output, subtitles_model)
+            pbar.update(1)
+            self.combiner = Combiner(self.audio_dir, self.image_dir, self.output)
+        logger.info("Binded!")
 
     def parse_reddit_comments(self, reddit_url):
-        print("Parsing Reddit post...")
+        logger.info("Parsing Reddit post...")
         title, comments = self.reddit_agent.parse_reddit_post(reddit_url)
-        print(f"Reddit post parsed: {len(comments)} comments parsed")
+        logger.info(f"Reddit post parsed: {len(comments)} comments parsed")
         return title, comments
 
     def generate_tts(self, title, comments):
-        print("Generating TTS...")
+        logger.info("Generating TTS...")
         self.tts_agent.generate_and_save("alloy", f"{title}?", self.audio_dir + "0.mp3")
         i = 1
         for text in tqdm(comments, desc="Generating TTS files"):
             voice = random.choice(["echo", "fable", "onyx", "nova", "shimmer"])
             self.tts_agent.generate_and_save(voice, text, self.audio_dir + f"{i}.mp3")
             i += 1
-        print("TTS generated!")
+        logger.info("TTS generated!")
 
     def generate_illustrations(self, title, comments):
-        print("Generating illustrations...")
+        logger.info("Generating illustrations...")
         helper = "create a very short dall-e 3 prompt to illustrate the following sentence,\
-                  focus on key elements only, text on image is forbidden. Pay attention to content policy (kissing ...) (prompt content only, no json): "
+                  focus on key elements only, text on image is forbidden. Pay attention to content policy (prompt content only, no json): "
         
         url = self.image_agent.generate(self.text_agent.send_message(helper + title))
         response = requests.get(url)
@@ -67,10 +79,10 @@ class VideoCreator:
             with open(self.image_dir + f"illustration_{i}.png", 'wb') as file:
                 file.write(response.content)
             i += 1
-        print("Illustrations generated!")
+        logger.info("Illustrations generated!")
 
     def generate_background(self, background_url, background_music_url):
-        print("Generating background...")
+        logger.info("Generating background...")
         mp3_files = [file for file in os.listdir(self.audio_dir) if file.endswith('.mp3')]
 
         total_duration = 0.0
@@ -81,25 +93,25 @@ class VideoCreator:
             audio_clip.close()
 
         total_duration += 0.2 * (len(mp3_files) - 1)
-        print("Downloading & formatting background...")
+        logger.debug("Downloading & formatting background...")
         self.background_agent.generate(total_duration, background_url, background_music_url)
-        print("Background generated!")
+        logger.info("Background generated!")
 
     def render_video(self):
-        print("Rendering...")
+        logger.info("Rendering...")
         self.combiner.process_files_reddit()
-        print(f"Video rendered at {self.output}!")
+        logger.info(f"Video rendered at {self.output}!")
 
     def generate_subtitles(self):
-        print("Generating subtitles...")
+        logger.info("Generating subtitles...")
         self.subtitle_agent.generate_subtitles()
-        print("Subtitles generated!")
+        logger.info("Subtitles generated!")
 
     def generate_from_reddit_comments(self, reddit_url, background_url, background_music_url, create_images, create_subtitles):
         title, comments = self.parse_reddit_comments(reddit_url)
-        self.generate_tts(title, comments)
         if (create_images):
             self.generate_illustrations(title, comments)
+        self.generate_tts(title, comments)
         self.generate_background(background_url, background_music_url)
         self.render_video()
         if (create_subtitles):

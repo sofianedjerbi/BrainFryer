@@ -6,3 +6,4 @@ playwright
 pytube
 tqdm
 faster-whisper
+opencv-python

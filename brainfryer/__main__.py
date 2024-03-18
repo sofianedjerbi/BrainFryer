@@ -1,4 +1,6 @@
 import argparse
+import logging
+import logging.config
 import os
 from dotenv import load_dotenv
 
@@ -18,6 +20,22 @@ DEFAULT_BACKGROUND = "https://www.youtube.com/watch?v=R0b-VFV8SJ8"
 
 load_dotenv()
 
+log_levels = {
+    'DEBUG': logging.DEBUG,
+    'INFO': logging.INFO,
+    'WARNING': logging.WARNING,
+    'ERROR': logging.ERROR,
+    'CRITICAL': logging.CRITICAL
+}
+
+log_level_str = os.getenv('LOG_LEVEL', 'INFO').upper()
+log_level = log_levels.get(log_level_str, logging.INFO)
+
+if log_level == logging.INFO:
+    logging.getLogger("openai").setLevel(logging.WARNING) # OpenAI INFO is too verbose
+
+logging.basicConfig(level=log_level, format='%(asctime)s - %(name)s - %(levelname)s - %(message)s')
+
 GPT_KEY = os.getenv('OPENAI_KEY')
 GPT_MODEL_TEXT = os.getenv('OPENAI_MODEL_TEXT')
 GPT_MODEL_IMAGE = os.getenv('OPENAI_MODEL_IMAGE')
@@ -26,7 +44,7 @@ GPT_MODEL_SUBTITLES = os.getenv('OPENAI_MODEL_WHISPER')
 
 def parse_arguments():
     parser = argparse.ArgumentParser(description='Generate attention-grabbing videos!', prog='python -m brainfryer')
-    parser.add_argument('url', help='Reddit URL')
+    parser.add_argument('url', nargs='?', default=None, help='Reddit URL')
     parser.add_argument('-b', '--background', help='Youtube background URL (optional)')
     parser.add_argument('-s', '--song', help='Youtube song URL (optional)')
     parser.add_argument('-i', '--gen-images', action='store_true', help='Generate images (default: False)')
@@ -39,7 +57,7 @@ def main():
     args = parse_arguments()
 
     # If CLI arguments are provided, use them; otherwise, prompt the user
-    if args.url:
+    if args.url is not None:
         url = args.url
         background = args.background or DEFAULT_BACKGROUND
         song = args.song or DEFAULT_SONG
@@ -53,6 +71,7 @@ def main():
         background = input("Youtube background url (empty = default): ") or DEFAULT_BACKGROUND
         song = input("Youtube song url (empty = default): ") or DEFAULT_SONG
         gen_images = True if input("Generate images (Y/N)? ").strip().lower() == 'y' else False
+        gen_subtitles = True if input("Generate subtitles (Y/N)? ").strip().lower() == 'y' else False
 
     creator = VideoCreator(GPT_KEY, GPT_MODEL_IMAGE, GPT_MODEL_TEXT, GPT_MODEL_TTS, GPT_MODEL_SUBTITLES)
 
