@@ -5,3 +5,4 @@ moviepy
 playwright
 pytube
 tqdm
+faster-whisper
