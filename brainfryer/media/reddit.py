@@ -82,7 +82,7 @@ class RedditAgent:
                 cleaned_text = re.sub(r' +', ' ', cleaned_text)
                 cleaned_text = re.sub(r'\n +| +\n', '\n', cleaned_text)
                 cleaned_text = re.sub(r'\n+', '\n', cleaned_text)
-                cleaned_text = cleaned_text.strip().strip("\n").strip("\t").strip("\r")
+                cleaned_text = cleaned_text.strip().strip("\n").strip("\t").strip("\r") + "."
 
                 if len(cleaned_text) > 220:
                     continue

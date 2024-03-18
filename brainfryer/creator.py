@@ -48,9 +48,9 @@ class VideoCreator:
             pbar.update(1)
         logger.info("Binded!")
 
-    def parse_reddit_comments(self, reddit_url):
+    def parse_reddit_comments(self, reddit_url, max_comment_number):
         logger.info("Parsing Reddit post...")
-        title, comments = self.reddit_agent.parse_reddit_post(reddit_url)
+        title, comments = self.reddit_agent.parse_reddit_post(reddit_url, max_comment_number)
         logger.info(f"Reddit post parsed: {len(comments)} comments parsed")
         return title, comments
 
@@ -109,8 +109,8 @@ class VideoCreator:
         self.subtitle_agent.generate_subtitles()
         logger.info("Subtitles generated!")
 
-    def generate_from_reddit_comments(self, reddit_url, background_url, background_music_url, create_images, create_subtitles):
-        title, comments = self.parse_reddit_comments(reddit_url)
+    def generate_from_reddit_comments(self, reddit_url, max_comment_number, background_url, background_music_url, create_images, create_subtitles):
+        title, comments = self.parse_reddit_comments(reddit_url, max_comment_number)
         if (create_images):
             self.generate_illustrations(title, comments)
         self.generate_tts(title, comments)
