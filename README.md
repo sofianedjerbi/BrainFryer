@@ -1,12 +1,25 @@
 <div align="center">
-  <img src="./.github/media/logo.png?" width="32%" height="32%"/>
-  <h1>BrainFryer</h1>
-  <h3>Generate attention-grabbing videos!</h3>
-
-  [![License](https://img.shields.io/github/license/chaoxel/BrainFryer?style=for-the-badge&logo=github)](LICENSE)
-  [![Discord](https://img.shields.io/discord/1195177036210253864?color=5865F2&label=discord&style=for-the-badge)](https://discord.gg/jwb26Xy5M7)
-  [![Demo](https://img.shields.io/badge/Tiktok%20-%20Demo?logo=tiktok&label=Demo&style=for-the-badge)](https://www.tiktok.com/@redditeel)
-
+  <table style="width:100%;">
+    <tr>
+      <td style="width:70%;">
+        <h1>BrainFryer</h1>
+        <h3>Turn online discussions into captivating videos!</h3>
+        <a href="LICENSE">
+          <img src="https://img.shields.io/github/license/chaoxel/BrainFryer?style=for-the-badge&logo=github" alt="License"/>
+        </a>
+        <a href="https://discord.gg/jwb26Xy5M7">
+          <img src="https://img.shields.io/discord/1195177036210253864?color=5865F2&label=discord&style=for-the-badge" alt="Discord"/>
+        </a>
+        <a href="https://www.tiktok.com/@redditeel">
+          <img src="https://img.shields.io/badge/Demo%20-%20Demo?logo=tiktok&label=TikTok&style=for-the-badge" alt="Demo"/>
+        </a>
+        <p>Join our creative community!</p>
+      </td>
+      <td>
+        <img src="./.github/media/logo.png?" width="100%" height="100%"/>
+      </td>
+    </tr>
+  </table>
 </div>
 
 
@@ -67,11 +80,17 @@ If you need illustrations:
 
 Brainfryer turns Reddit threads into videos through a multi-step process:
 
-1. **Web Parsing**: Uses Playwright for navigating and taking screenshots of web pages.
-2. **Image Generation**: ChatGPT creates prompts for Stable Diffusion or Dall-E to generate illustrations.
-3. **Text-to-Speech**: Utilizes OpenAI's TTS API to convert text into speech.
-4. **Background Handling**: Downloads and crops YouTube backgrounds with Pytube & Moviepy.
-5. **Video Assembly**: Combines images, backgrounds, and audio using Moviepy to create the final video.
-6. **Subtitles Creation**: Converts audio to text with Whisper, adding timestamps to generate subtitles.
+1. **Webpage Parsing**: Utilizes Playwright to navigate and parse the target webpage for content extraction.
+2. **Screenshot Capture**: Takes screenshots of the webpage, capturing key visual elements.
+3. **Content Analysis**: Uses ChatGPT to analyze the extracted content and identify themes or key points.
+4. **Illustration Prompt Generation**: Based on the analysis, generates creative prompts for illustrations.
+5. **Image Generation**: Sends these prompts to Stable Diffusion or Dall-E, which then generate corresponding images.
+6. **Text-to-Speech Synthesis**: Converts the extracted textual content into spoken words using OpenAI's TTS API.
+7. **Background Video Processing**:
+   - Downloads the specified YouTube background video using Pytube.
+   - Edits and crops the background video to fit the final video's format using Moviepy.
+8. **Video Assembly**: Combines the generated images, edited background video, and synthesized speech into a cohesive video using Moviepy.
+9. **Audio Transcription**: Converts the final video's audio into text using Whisper for subtitle generation.
+10. **Subtitle Timing**: Analyzes the transcription to add accurate timestamps for each word, creating synchronized subtitles.
+11. **Final Editing**: Applies the subtitles to the video, adjusting for readability and style.
 
-This streamlined approach automates the creation of engaging videos from online content.
