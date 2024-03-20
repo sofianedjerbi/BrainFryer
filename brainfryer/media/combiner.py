@@ -22,7 +22,7 @@ class Combiner:
             image_path = f'{self.images_dir}/reddit_{i}.png'
             img_clip = ImageClip(image_path).set_duration(audio_clip.duration)
             
-            new_width = background_clip.size[0] * 0.85
+            new_width = background_clip.size[0] * 0.8
             aspect_ratio = img_clip.size[1] / img_clip.size[0]
             new_height = new_width * aspect_ratio
             img_clip = img_clip.resize(width=new_width, height=new_height)
@@ -39,7 +39,7 @@ class Combiner:
             if os.path.exists(pic_path):
                 pic_clip = ImageClip(pic_path).set_duration(audio_clip.duration)
                 
-                new_width = background_clip.size[0] * 0.6
+                new_width = background_clip.size[0] * 0.65
                 aspect_ratio = pic_clip.size[1] / pic_clip.size[0]
                 new_height = new_width * aspect_ratio
                 pic_clip = pic_clip.resize(width=new_width, height=new_height)
