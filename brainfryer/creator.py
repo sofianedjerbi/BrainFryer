@@ -16,7 +16,17 @@ from brainfryer.media.subtitles import *
 logger = logging.getLogger(__name__)
 
 class VideoCreator:
-    def __init__(self, key, image_model, text_model, tts_model, subtitles_model):
+    def __init__(
+            self,
+            key,
+            image_model,
+            text_model,
+            tts_model,
+            subtitles_model,
+            dall_e,
+            stable_diffusion_host,
+            stable_diffusion_port
+        ):
         if not os.path.exists("generated"):
             os.makedirs(f"generated/")
 
@@ -34,7 +44,10 @@ class VideoCreator:
         with tqdm(total=agent_nb, desc="Binding to APIs") as pbar:
             self.text_agent = TextAgent(key, text_model)
             pbar.update(1)
-            self.image_agent = ImageAgent(key, image_model, self.text_agent)
+            if dall_e:
+                self.image_agent = ImageAgentDallE(key, image_model, self.text_agent)
+            else:
+                self.image_agent = ImageAgentStableDiffusion(stable_diffusion_host, stable_diffusion_port)
             pbar.update(1)
             self.tts_agent = TTSAgent(key, tts_model)
             pbar.update(1)
@@ -69,17 +82,16 @@ class VideoCreator:
         helper = "create a very short dall-e 3 prompt to illustrate the following sentence, " \
             "focus on key elements only, text on image is forbidden. Make it follow dall-e content policy if needed. " \
             "(prompt content only, no json): "
-        
-        url = self.image_agent.generate(self.text_agent.send_message(helper + title))
-        response = requests.get(url)
-        with open(self.image_dir + "illustration_0.png", 'wb') as file:
-            file.write(response.content)
+        self.image_agent.generate(
+            self.text_agent.send_message(helper + title),
+            self.image_dir + "illustration_0.png"
+        )
         i = 1
         for text in tqdm(comments, desc="Generating illustrations"):
-            url = self.image_agent.generate(self.text_agent.send_message(helper + text))
-            response = requests.get(url)
-            with open(self.image_dir + f"illustration_{i}.png", 'wb') as file:
-                file.write(response.content)
+            url = self.image_agent.generate(
+                self.text_agent.send_message(helper + text),
+                self.image_dir + f"illustration_{i}.png"
+            )
             i += 1
         logger.info("Illustrations generated!")
 

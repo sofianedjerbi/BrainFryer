@@ -44,7 +44,7 @@ class RedditAgent:
             if page.is_visible('#accept-all-cookies-button'):
                 page.click('#accept-all-cookies-button')
 
-            for i in range(5):
+            for _ in range(5):
                 page.evaluate("window.scrollTo(0, document.body.scrollHeight)")
                 page.wait_for_timeout(500)
                 if page.is_visible('text="View more comments"'):

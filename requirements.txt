@@ -7,3 +7,4 @@ pytube
 tqdm
 faster-whisper
 opencv-python
+webuiapi
