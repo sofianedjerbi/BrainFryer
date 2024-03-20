@@ -1,26 +1,15 @@
+<img src="./.github/media/logo.png?" alt="BrainFryer logo" align="right" width="25%">
+
 <div align="center">
-  <table style="width:100%;">
-    <tr>
-      <td style="width:70%;">
-        <h1>BrainFryer</h1>
-        <h3>Turn online discussions into captivating videos!</h3>
-        <a href="LICENSE">
-          <img src="https://img.shields.io/github/license/chaoxel/BrainFryer?style=for-the-badge&logo=github" alt="License"/>
-        </a>
-        <a href="https://discord.gg/jwb26Xy5M7">
-          <img src="https://img.shields.io/discord/1195177036210253864?color=5865F2&label=discord&style=for-the-badge" alt="Discord"/>
-        </a>
-        <a href="https://www.tiktok.com/@redditeel">
-          <img src="https://img.shields.io/badge/Demo%20-%20Demo?logo=tiktok&label=TikTok&style=for-the-badge" alt="Demo"/>
-        </a>
-        <p>Join our creative community!</p>
-      </td>
-      <td>
-        <img src="./.github/media/logo.png?" width="100%" height="100%"/>
-      </td>
-    </tr>
-  </table>
+  <h1>BrainFryer</h1>
+  <h3>Turn online discussions into captivating videos!</h3>
+  <h5><i>Join our creative community!</i></h5>
+  
+  [![License](https://img.shields.io/github/license/chaoxel/BrainFryer?style=for-the-badge&logo=github)](LICENSE)
+  [![Discord](https://img.shields.io/discord/1195177036210253864?color=5865F2&label=discord&style=for-the-badge)](https://discord.gg/jwb26Xy5M7)
+  [![Demo](https://img.shields.io/badge/Demo%20-%20Demo?logo=tiktok&label=TikTok&style=for-the-badge)](https://www.tiktok.com/@redditeel)
 </div>
+
 
 
 ## How to use
