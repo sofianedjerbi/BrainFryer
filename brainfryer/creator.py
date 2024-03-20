@@ -13,20 +13,24 @@ from brainfryer.media.combiner import *
 from brainfryer.media.background import *
 from brainfryer.media.subtitles import *
 
+from tiktok_uploader.upload import upload_video, upload_videos
+from tiktok_uploader.auth import AuthBackend
+
+
 logger = logging.getLogger(__name__)
 
 class VideoCreator:
     def __init__(
-            self,
-            key,
-            image_model,
-            text_model,
-            tts_model,
-            subtitles_model,
-            dall_e,
-            stable_diffusion_host,
-            stable_diffusion_port
-        ):
+        self,
+        key,
+        image_model,
+        text_model,
+        tts_model,
+        subtitles_model,
+        dall_e,
+        stable_diffusion_host,
+        stable_diffusion_port
+    ):
         if not os.path.exists("generated"):
             os.makedirs(f"generated/")
 
@@ -121,7 +125,26 @@ class VideoCreator:
         self.subtitle_agent.generate_subtitles()
         logger.info("Subtitles generated!")
 
-    def generate_from_reddit_comments(self, reddit_url, max_comment_number, background_url, background_music_url, create_images, create_subtitles):
+    def upload(self, title):
+        logger.info("Uploading...")
+        upload_video(
+            self.output,
+            description=f"{title} #foryou #fyp #meme #funny #story #storytime #viral #reddit #satisfying #weird",
+            cookies='cookies.txt',
+        )
+        logger.info("Video uploaded!")
+        
+
+    def generate_from_reddit_comments(
+        self,
+        reddit_url,
+        max_comment_number,
+        background_url,
+        background_music_url,
+        create_images,
+        create_subtitles,
+        upload
+    ):
         title, comments = self.parse_reddit_comments(reddit_url, max_comment_number)
         if (create_images):
             self.generate_illustrations(title, comments)
@@ -130,3 +153,5 @@ class VideoCreator:
         self.render_video()
         if (create_subtitles):
             self.generate_subtitles()
+        if (upload):
+            self.upload(title)

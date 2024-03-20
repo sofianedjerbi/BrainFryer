@@ -37,6 +37,8 @@ if log_level == logging.INFO:
     logging.getLogger("openai").setLevel(logging.WARNING) 
     logging.getLogger("httpx").setLevel(logging.WARNING)
     logging.getLogger("faster_whisper").setLevel(logging.WARNING)
+    logging.getLogger('moviepy').setLevel(logging.WARNING)
+    logging.getLogger('tiktok_uploader').setLevel(logging.WARNING)
 
 logging.basicConfig(level=log_level, format='%(asctime)s - %(name)s - %(levelname)s - %(message)s')
 
@@ -57,6 +59,7 @@ def parse_arguments():
     parser.add_argument('-i', '--gen-images', action='store_true', help='Generate images (default: False)')
     parser.add_argument('-t', '--gen-subtitles', action='store_true', help='Generate subtitles (default: False)')
     parser.add_argument('-d', '--dall-e', action='store_true', help='Use Dall-E instead of Stable Diffusion (default: False)')
+    parser.add_argument('-u', '--upload', action='store_true', help='Upload on TikTok with cookies.txt (default: False)')
 
     args = parser.parse_args()
     return args
@@ -74,6 +77,7 @@ def main():
         gen_images = args.gen_images
         gen_subtitles = args.gen_subtitles
         dall_e = args.dall_e
+        upload = args.upload
     else:
         print(LOGO)
         # Query user
@@ -83,7 +87,8 @@ def main():
         song = input("Youtube song url (empty = default): ") or DEFAULT_SONG
         gen_images = True if input("Generate images (Y/N, default = N)? ").strip().lower() == 'y' else False
         gen_subtitles = True if input("Generate subtitles (Y/N, default = N)? ").strip().lower() == 'y' else False
-        dall_e = True if input("Use Dall-E ? May cause extra cost. (Y/N, default = N) ").strip().lower() == 'y' else False
+        dall_e = True if input("Use Dall-E ? May cause extra cost (Y/N, default = N) ").strip().lower() == 'y' else False
+        upload = True if input("Upload with cookies.txt (Y/N, default = N) ").strip().lower() == 'y' else False
 
     creator = VideoCreator(
         GPT_KEY,
@@ -97,7 +102,7 @@ def main():
     )
 
     # Generate
-    creator.generate_from_reddit_comments(url, comments, background, song, gen_images, gen_subtitles)
+    creator.generate_from_reddit_comments(url, comments, background, song, gen_images, gen_subtitles, upload)
 
 if __name__ == "__main__":
     main()
