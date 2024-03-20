@@ -46,7 +46,7 @@ class Combiner:
                 pic_clip = pic_clip.set_pos('center')
 
                 # Adjusted to include the margin and position
-                clips.append(pic_clip.margin(top=32, opacity=0).set_position(("center", "top")))
+                clips.append(pic_clip.margin(top=64, opacity=0).set_position(("center", "top")))
 
             composite_clip = CompositeVideoClip(
                 clips,

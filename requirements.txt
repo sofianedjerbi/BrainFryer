@@ -8,3 +8,4 @@ tqdm
 faster-whisper
 opencv-python
 webuiapi
+tiktok-uploader

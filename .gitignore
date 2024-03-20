@@ -161,3 +161,6 @@ cython_debug/
 
 # Generated brainfryer files
 generated/
+
+# Browser cookies for Tiktok auth
+cookies.txt

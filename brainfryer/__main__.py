@@ -39,6 +39,7 @@ if log_level == logging.INFO:
     logging.getLogger("faster_whisper").setLevel(logging.WARNING)
     logging.getLogger('moviepy').setLevel(logging.WARNING)
     logging.getLogger('tiktok_uploader').setLevel(logging.WARNING)
+    logging.getLogger('WDM').setLevel(logging.WARNING)
 
 logging.basicConfig(level=log_level, format='%(asctime)s - %(name)s - %(levelname)s - %(message)s')
 
